@@ -46,7 +46,7 @@ jobs:
           }
           $lines | Set-Content SHA256SUMS.txt
       - name: Upload checksums
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
           files: SHA256SUMS.txt
