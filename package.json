@@ -1,0 +1,31 @@
+{
+  "name": "lexinote",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A fast, local-first English vocabulary notebook for Windows.",
+  "license": "MIT",
+  "author": "Hoang Vu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoangvu1806/NoteVocab.git"
+  },
+  "bugs": "https://github.com/hoangvu1806/NoteVocab/issues",
+  "homepage": "https://github.com/hoangvu1806/NoteVocab#readme",
+  "engines": { "node": ">=20" },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "check": "npm run build && cargo check --manifest-path src-tauri/Cargo.toml",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-autostart": "^2.5.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.0",
+    "vite": "^7.0.0"
+  }
+}

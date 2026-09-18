@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f6f2" />
+    <title>LexiNote</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="titlebar" data-tauri-drag-region>
+        <div class="brand" data-tauri-drag-region>
+          <span class="brand-mark"><img src="/src-tauri/icons/icon.png" alt="" /></span>
+          <div data-tauri-drag-region>
+            <div class="brand-name" data-tauri-drag-region>LexiNote</div>
+            <div class="brand-subtitle" data-tauri-drag-region>English, remembered.</div>
+          </div>
+        </div>
+        <div class="window-actions">
+          <button class="icon-button" id="settingsButton" aria-label="Open settings" title="Settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg>
+          </button>
+          <button class="icon-button" id="themeButton" aria-label="Switch theme" title="Switch theme"></button>
+          <button class="icon-button" id="hideButton" aria-label="Hide window" title="Hide (Esc)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="set-bar" aria-label="Vocabulary set controls">
+          <div class="set-picker-wrap">
+            <span class="eyebrow">CURRENT SET</span>
+            <div class="custom-set-picker" id="setPicker">
+              <button type="button" id="setPickerButton" aria-label="Current vocabulary set" aria-haspopup="listbox" aria-expanded="false">
+                <span id="setPickerLabel">My first set</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9.5 5 5 5-5"/></svg>
+              </button>
+              <div class="set-picker-dropdown" id="setPickerDropdown" role="listbox" aria-label="Vocabulary sets" hidden></div>
+            </div>
+          </div>
+          <div class="set-actions">
+            <button class="soft-button" id="newSetButton" title="Create set">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              New set
+            </button>
+            <button class="icon-button subtle" id="setMenuButton" aria-label="Set options" title="Set options">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <form class="add-panel" id="addForm">
+          <div class="add-copy">
+            <label for="wordInput">Add a word</label>
+            <span id="connectionStatus" class="connection-status"><i></i><span>Online lookup</span></span>
+          </div>
+          <div class="input-row">
+            <div class="word-input-wrap">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+              <input id="wordInput" autocomplete="off" spellcheck="false" maxlength="80" placeholder="Type an English word..." />
+              <span class="key-hint">Enter</span>
+            </div>
+            <button class="primary-button" id="addButton" type="submit">Add</button>
+          </div>
+          <p class="lookup-note" id="lookupNote">Meaning, IPA and Vietnamese translation are filled in when online.</p>
+        </form>
+
+        <section class="library">
+          <div class="library-heading">
+            <div>
+              <h1 id="libraryTitle">My words</h1>
+              <span id="wordCount">0 words</span>
+            </div>
+            <div class="filter-wrap">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+              <input id="filterInput" aria-label="Filter saved words" placeholder="Filter" autocomplete="off" />
+            </div>
+          </div>
+          <div id="wordList" class="word-list" aria-live="polite"></div>
+        </section>
+      </main>
+
+      <footer>
+        <span><kbd>Ctrl</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>Space</kbd> to show or hide</span>
+        <span id="savedStatus">Saved locally</span>
+      </footer>
+    </div>
+
+    <div class="popover" id="setMenu" hidden>
+      <button id="renameSetButton">Rename set</button>
+      <button id="deleteSetButton" class="danger">Delete set</button>
+    </div>
+
+    <section class="settings-panel" id="settingsPanel" hidden aria-label="Settings">
+      <div class="settings-heading">
+        <div>
+          <span class="eyebrow">PREFERENCES</span>
+          <h2>Settings</h2>
+        </div>
+        <button class="icon-button subtle" id="closeSettingsButton" aria-label="Close settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg>
+        </button>
+      </div>
+      <label class="settings-field" for="translationLanguage">
+        <span>Translate to</span>
+        <select id="translationLanguage"></select>
+      </label>
+      <div class="settings-row">
+        <div>
+          <strong>Start with Windows</strong>
+          <small>Launch quietly in the system tray</small>
+        </div>
+        <label class="switch" title="Start LexiNote when you sign in">
+          <input type="checkbox" id="autostartToggle" />
+          <span></span>
+        </label>
+      </div>
+      <p class="settings-status" id="settingsStatus">Preferences are saved automatically.</p>
+    </section>
+
+    <dialog id="textDialog">
+      <form method="dialog" id="textDialogForm">
+        <div class="dialog-icon" id="dialogIcon"></div>
+        <h2 id="dialogTitle">Create a new set</h2>
+        <p id="dialogDescription">Keep related vocabulary together.</p>
+        <input id="dialogInput" maxlength="48" autocomplete="off" />
+        <div class="dialog-actions">
+          <button value="cancel" class="soft-button">Cancel</button>
+          <button value="confirm" class="primary-button" id="dialogConfirm">Create set</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="confirmDialog">
+      <form method="dialog">
+        <div class="dialog-icon warning">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5M12 17h.01"/><path d="M10.3 4.7 3.6 16.3A2 2 0 0 0 5.3 19h13.4a2 2 0 0 0 1.7-2.7L13.7 4.7a2 2 0 0 0-3.4 0Z"/></svg>
+        </div>
+        <h2>Delete this set?</h2>
+        <p id="confirmDescription">Its saved words will also be removed from this device.</p>
+        <div class="dialog-actions">
+          <button value="cancel" class="soft-button">Keep set</button>
+          <button value="confirm" class="danger-button">Delete</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
